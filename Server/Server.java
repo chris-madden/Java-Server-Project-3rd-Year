@@ -7,13 +7,13 @@ import java.util.Map;
 
 public class Server extends Thread{
 	
+	// Variables
 	private Socket clientSocket;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	private ReadUsers ru;
 	private boolean notUsername = true;
-	
-	private String message, username; 
+	private String username, password; 
 	
 	//Constructor
 	public Server(Socket serverConnection) 
@@ -44,9 +44,6 @@ public class Server extends Thread{
 			e1.printStackTrace();
 		}
 		
-		// Write message to user for their login details
-		//System.out.println("Hello\n Please enter your login details\n");
-		
 		//====================== SET UP INPUT AND OUTPUT STREAMS ================================
 		
 		try
@@ -57,10 +54,6 @@ public class Server extends Thread{
 			// Set up output stream
 			out = new ObjectOutputStream(clientSocket.getOutputStream());
 			
-			/*// Write message to user for their login details
-			out.writeObject("Enter your login details");
-			out.flush();*/
-			
 		} catch (IOException e) 
 		{
 			
@@ -68,9 +61,8 @@ public class Server extends Thread{
 			
 		}// End try catch
 		
-		//=============================== READ IN MESSAGES FROM CLIENT =============================
+		//=============================== READ IN AND SEARCH USERNAME AND PASSWORD=============================
 		
-	
 		do{
 			
 			try 
@@ -78,8 +70,13 @@ public class Server extends Thread{
 				// Read in the username
 				username = (String) in.readObject();
 				
+				password = (String) in.readObject();
+				
 				// Search for username and return boolean value
-				notUsername = ru.searchUsername(username);
+				notUsername = ru.searchLoginDetails(username, password);
+				
+				/*// Search for password and return boolean
+				notPassword = ru.searchPassword(password);*/
 				
 				// Send back answer 
 				out.writeBoolean(notUsername);
@@ -101,6 +98,20 @@ public class Server extends Thread{
 			
 		}while(notUsername);
 			
+		//====================== Close connections ======================================
+		
+		try{
+			
+			in.close();
+			out.close();
+			clientSocket.close();
+			
+		}
+		catch(IOException ioException)
+		{
+			ioException.printStackTrace();
+		}
+		
 	}// End run 
 		
 }// End class Server

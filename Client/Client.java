@@ -6,14 +6,16 @@ import java.util.Scanner;
 
 public class Client {
 	
-	Scanner input = new Scanner(System.in);
-	
+	// Variables
+	private Scanner input = new Scanner(System.in);
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private Login login;
 	private String ipaddress;
-	private String message, username, password;
-	private boolean isNotUsername = false, isPassword = false;
+	private String username, password;
+	private boolean isNotUsername = false;
+	
+	//==================== METHOD FOR SENDING INFORMATION TO SERVER =============================
 	
 	public void send(String message)
 	{
@@ -34,10 +36,15 @@ public class Client {
 		
 	}// End method send
 	
+	//============================ METHOD USED TO RUN CLIENT SIDE CODE =================================
+	
 	public void run() throws Exception
 	{
-		//1. creating a socket to connect to the server
+		
+		//Prompt user for ip address 
 		System.out.println("Please Enter your IP Address");
+		
+		// Store ip address in String
 		ipaddress = input.next();
 		
 		// Create socket with entered ip address and port number
@@ -46,18 +53,18 @@ public class Client {
 		// Print message to show you've connected 
 		System.out.println("Connected to " + ipaddress + " in port 2004");
 		
+		//========================== SET UP STREAMS ===============================
+		
 		//Set up output stream
 		out = new ObjectOutputStream(requestSocket.getOutputStream());
 		
 		// Set up input stream
 		in = new ObjectInputStream(requestSocket.getInputStream());
 		
-		/*//Receive message
-		message = (String)in.readObject();
+		//============================== TAKE LOGIN DETAILS FROM USER ===============================
 		
-		System.out.println(message);*/
-		
-		System.out.println("Enter your login details");
+		System.out.println("\n\t\tEnter your login details");
+		System.out.println("\t\t========================");
 		
 		// Create new login object
 		login = new Login();
@@ -67,34 +74,46 @@ public class Client {
 			// Store username in variable
 			username = login.username();
 			
+			// Get password off of user
+			password = login.password();
+			
 			// Send username to server
 			send(username);
+			
+			// Send password to server
+			send(password);
 			
 			// Read back answer from server
 			isNotUsername = in.readBoolean();
 			
-			// Prompts user that the username is incorrect
+			// Prompts user that the login details are incorrect
 			if(isNotUsername == true)
 			{
 				
-				System.out.println("Incorrect username");
+				System.out.println("\n\t***** Incorrect details - Try Again *****");
 				
 			}
 			
 		}while(isNotUsername == true);
 		
 		
+		// Print welcome message to user
+		System.out.println("\nSuccess - Welcome " + username);
 		
+		//============================= CLOSE THE CONNECTIONS ===========================
 			
-		
-		
-		
-		
-		
-		/*// Take Password
-		System.out.print("\nPassword: ");
-		password = input.next();*/
-
+		try{
+			
+			in.close();
+			out.close();
+			requestSocket.close();
+			
+		}
+		catch(IOException ioException)
+		{
+			ioException.printStackTrace();
+		}
+	
 	}// End run
 
 }// End class Client

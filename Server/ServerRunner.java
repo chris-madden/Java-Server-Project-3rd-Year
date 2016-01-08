@@ -18,10 +18,11 @@ public class ServerRunner {
 			// Pass accepted connection into Server 
 			Server serverThread = new Server(serverConnection);
 			
+			// Start thread
 			serverThread.start();
 			
 		}// End while
-
+		
 	}// End main
 
 }// End class ServerRunnre

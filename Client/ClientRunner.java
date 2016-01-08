@@ -1,14 +1,14 @@
 
 public class ClientRunner {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		
 		// Create object client
 		Client client = new Client();
 		
 		try 
 		{
-			
 			// Call the run method
 			client.run();
 			
@@ -21,5 +21,3 @@ public class ClientRunner {
 	}// End main
 
 }// End class ClientRunner
-
-//40.76.90.148

@@ -9,10 +9,12 @@ public class ReadUsers
 {
 	
 	// Declare hashmap for usernames and passwords
-	Map<String, String> hm = new HashMap<String, String>();
+	private Map<String, String> hm = new HashMap<String, String>();
 	
 	//Variables
-	String username, password;
+	private String username, password;
+	
+	// =============== BUILD A HASHMAP FROM THE USERS.TXT FILE ============================
 
 	// This method builds a hashmap from the users.txt file
 	public void createHashMap() throws Exception
@@ -42,45 +44,61 @@ public class ReadUsers
 			
 		}// End while
 		
-	    // Check contents of the Map 
-		for(Map.Entry<String, String> entry : hm.entrySet())
+	    // ================== USED FOR TESTING PURPOSES ===============================
+		
+		// Prints out username and passwords
+		/*for(Map.Entry<String, String> entry : hm.entrySet())
 		{
 			System.out.println("Key: " + entry.getKey() + " Value :" + entry.getValue());
-		}
+		}*/
 	
+		// ============================================================================
+		
 		// Close the reader
 		br.close();
 		
 	}// End createHashMap
 	
-	public boolean searchUsername(String username)
+	// ==================== SEARCHES AND VALIDATES LOGIN DETAILS ==========================
+	
+	public boolean searchLoginDetails(String username, String password)
 	{
 		
-		boolean nameNotFound = true;
+		// Variables used to validate correct or incorrect details
+		boolean nameNotFound = true, passwordNotFound = true;
 		
-		// Search through the map
-		for(Map.Entry<String, String> entry : hm.entrySet())
+		// Checks if the username is in the hashmap
+		if(hm.containsKey(username))
 		{
 			
-			// Compare names in hashmap to what the user entered
-			if(username.equals(entry.getKey()))
-			{
-				
-				System.out.println("Username is good!");
-				
-				nameNotFound = false;
-				
-			}
-			else if(!username.equals(entry.getKey()))
-			{
-				
-				System.out.println("Username is bad!");
-				
-			}
+			//Testing code to see if username was found
+			//System.out.println("That name is in the map");
 			
-		}// End for loop
+			// set to false if username is found
+			nameNotFound = false;
 		
-		return nameNotFound;
+		}
+		
+		// Compare passwords if username is in the map
+		if(nameNotFound == false)
+		{
+			
+			// Compare password from user with password attached to username
+			if(password.equals(hm.get(username)))
+			{
+				
+				//Testing code to see if password was found
+				//System.out.println("Password matches username");
+				
+				// set to false if password is found
+				passwordNotFound = false;
+				
+			}// End nested if
+			
+		}// End if
+		
+		// If passwordNotFound is returned as false then login details were correct
+		return passwordNotFound;
 		
 	}// End searchUsername
 	
